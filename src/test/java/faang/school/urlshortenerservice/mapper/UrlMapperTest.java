@@ -23,10 +23,9 @@ class UrlMapperTest {
     @Test
     @DisplayName("Success when Url mapping to UrlDto")
     public void toDto() {
-        Url url = Url.builder()
-                .hash(HASH)
-                .url(URL)
-                .build();
+        Url url = new Url()
+                .setHash(HASH)
+                .setUrl(URL);
 
         UrlDto result = urlMapper.toDto(url, DOMAIN);
 
@@ -37,9 +36,8 @@ class UrlMapperTest {
     @Test
     @DisplayName("Success mapping to Url")
     public void toEntity() {
-        UrlDto urlDto = UrlDto.builder()
-                .url(URL)
-                .build();
+        UrlDto urlDto = new UrlDto()
+                .setUrl(URL);
 
         Url result = urlMapper.toEntity(urlDto, HASH);
 

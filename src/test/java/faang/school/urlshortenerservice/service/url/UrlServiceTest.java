@@ -68,16 +68,13 @@ class UrlServiceTest {
 
     @BeforeEach
     public void init() {
-        longUrlDto = UrlDto.builder()
-                .url(URL)
-                .build();
-        url = Url.builder()
-                .hash(HASH)
-                .url(URL)
-                .build();
-        shortUrlDto = UrlDto.builder()
-                .url(DOMAIN + HASH)
-                .build();
+        longUrlDto = new UrlDto()
+                .setUrl(URL);
+        url = new Url()
+                .setHash(HASH)
+                .setUrl(URL);
+        shortUrlDto = new UrlDto()
+                .setUrl(DOMAIN + HASH);
         existingHashes = Arrays.asList(HASH);
         ReflectionTestUtils.setField(cacheProperties, "nonWorkingUrlTime", 1);
     }
@@ -133,23 +130,18 @@ class UrlServiceTest {
     @Test
     @DisplayName("Success when create short url")
     public void whenCreateShortUrlThenReturnUrlDto() {
-        when(hashCache.getHash()).thenReturn(HASH);
-        when(urlRepository.findUrlByHash(HASH)).thenReturn(Optional.empty());
-        when(urlRepository.save(url)).thenReturn(url);
+        when(urlRepository.findByUrl(url.getUrl())).thenReturn(Optional.of(url));
+        when(urlCacheRepository.findUrlByHash(url.getHash())).thenReturn(Optional.empty());
         doNothing().when(urlCacheRepository).save(url);
         when(shortUrlProperties.getDomain()).thenReturn(DOMAIN);
-
-        when(urlMapper.toEntity(longUrlDto, HASH)).thenReturn(url);
         when(urlMapper.toDto(url, DOMAIN)).thenReturn(shortUrlDto);
 
         UrlDto result = urlService.createShortUrl(longUrlDto);
 
         assertNotNull(result);
         assertEquals(DOMAIN + HASH, result.getUrl());
-        verify(hashCache).getHash();
-        verify(urlMapper).toEntity(longUrlDto, HASH);
-        verify(urlRepository).findUrlByHash(HASH);
-        verify(urlRepository).save(url);
+        verify(urlRepository).findByUrl(url.getUrl());
+        verify(urlCacheRepository).findUrlByHash(url.getHash());
         verify(urlCacheRepository).save(url);
         verify(shortUrlProperties).getDomain();
         verify(urlMapper).toDto(url, DOMAIN);

@@ -21,7 +21,7 @@ spring:
     redis:
       port: 6379
       host: localhost
-      urlTtl: 86400
+      urlTtl: 1 # days
 
 server:
   port: 8080
@@ -42,7 +42,7 @@ localСache:
 hash:
   clean:
     scheduler:
-      cron: "0 0 0/24 * * *"
+      cron: "0 0 0 * * *"
 
 executor:
   threads:
@@ -61,4 +61,4 @@ uniqueNumbers:
   amount: 10_000
 
 url:
-  domain: localhost:8080/v1/urls/
+  domain: http://localhost:8080/v1/urls/ # заглушка

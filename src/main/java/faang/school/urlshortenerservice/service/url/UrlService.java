@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -60,14 +61,14 @@ public class UrlService {
     public UrlDto createShortUrl(UrlDto urlDto) {
         log.info("start createShortUrl with urlDto: {}", urlDto);
 
-        String hash = hashCache.getHash();
-        log.info("get hash: {}", hash);
+        Url url = urlRepository.findByUrl(urlDto.getUrl())
+                .orElseGet(() -> urlRepository.save(urlMapper.toEntity(urlDto, hashCache.getHash())));
+        log.info("Url: {}", url);
+        url.setCreatedAt(LocalDateTime.now());
 
-        Url url = urlRepository.findUrlByHash(hash)
-                .orElse(urlRepository.save(urlMapper.toEntity(urlDto, hash)));
-        log.info("get Url: {}", url);
-
-        urlCacheRepository.save(url);
+        if (urlCacheRepository.findUrlByHash(url.getHash()).isEmpty()) {
+            urlCacheRepository.save(url);
+        }
 
         UrlDto shortUrlDto = urlMapper.toDto(url, shortUrlProperties.getDomain());
         log.info("finish createShortUrl with shortUrl: {}", shortUrlDto);

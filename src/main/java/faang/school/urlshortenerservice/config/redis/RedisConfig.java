@@ -3,6 +3,7 @@ package faang.school.urlshortenerservice.config.redis;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import faang.school.urlshortenerservice.entity.Url;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -27,17 +28,18 @@ public class RedisConfig {
     public RedisCacheConfiguration cacheConfiguration() {
         return RedisCacheConfiguration.defaultCacheConfig()
                 .disableCachingNullValues()
-                .entryTtl(Duration.ofSeconds(redisProperties.getUrlTtl()))
+                .entryTtl(Duration.ofDays(redisProperties.getUrlTtl()))
                 .serializeValuesWith(RedisSerializationContext
                         .SerializationPair
                         .fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper)));
     }
 
     @Bean
-    JedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration configuration =
-                new RedisStandaloneConfiguration(redisProperties.getHost(), redisProperties.getPort());
-        return new JedisConnectionFactory(configuration);
+    JedisConnectionFactory jedisConnectionFactory(
+            @Value("${spring.data.redis.host}") String host,
+            @Value("${spring.data.redis.port}") Integer port
+    ) {
+        return new JedisConnectionFactory(new RedisStandaloneConfiguration(host, port));
     }
 
     @Bean

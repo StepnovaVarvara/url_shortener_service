@@ -23,6 +23,7 @@ public class UrlCacheRepositoryImpl implements UrlCacheRepository {
 
     @Override
     public Optional<Url> findUrlByHash(String hash) {
+        log.info("finding url by hash in Redis cache: {}", hash);
         return Optional.ofNullable(redisStringTemplate.opsForValue().get(hash));
     }
 }
