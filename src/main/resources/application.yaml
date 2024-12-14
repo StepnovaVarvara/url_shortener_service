@@ -32,12 +32,12 @@ logging:
 
 generator:
   hashes:
-    amount: 10_000
+    amount: 5_000
 
-localСache:
-  fill:
-    batch:
-      size: 10_000
+#localСache:
+#  fill:
+#    batch:
+#      size: 5_000
 
 hash:
   clean:
@@ -49,16 +49,15 @@ executor:
     count: 10
 
 cache:
-  capacity: 3_000
-  fill:
-    percent: 20
+  capacity: 2_000
+  fillPercent: 20
   batch:
     sublist:
-      length: 1_000
+      length: 200
   nonWorkingUrlTime: 1 # years
 
 uniqueNumbers:
-  amount: 10_000
+  amount: 5_000
 
 url:
   domain: http://localhost:8080/v1/urls/ # заглушка

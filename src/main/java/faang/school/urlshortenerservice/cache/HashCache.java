@@ -25,10 +25,9 @@ public class HashCache {
 
     private final AtomicBoolean filling;
     private final Queue<Hash> hashesCache;
-
-    private final ExecutorServiceConfig executorServiceConfig;
-    private final CacheProperties cacheProperties;
     private final HashGenerator hashGenerator;
+    private final CacheProperties cacheProperties;
+    private final ExecutorServiceConfig executorServiceConfig;
 
     @Autowired
     public HashCache(ExecutorServiceConfig executorServiceConfig,

@@ -63,8 +63,8 @@ public class UrlService {
 
         Url url = urlRepository.findByUrl(urlDto.getUrl())
                 .orElseGet(() -> urlRepository.save(urlMapper.toEntity(urlDto, hashCache.getHash())));
-        log.info("Url: {}", url);
         url.setCreatedAt(LocalDateTime.now());
+        log.info("Url: {}", url);
 
         if (urlCacheRepository.findUrlByHash(url.getHash()).isEmpty()) {
             urlCacheRepository.save(url);
