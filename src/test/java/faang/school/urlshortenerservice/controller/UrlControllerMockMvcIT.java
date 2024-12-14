@@ -49,7 +49,7 @@ public class UrlControllerMockMvcIT {
     private static final String LONG_URL = "https://www.baeldung.com/";
     private static final String INVALID_URL = "www.baeldung.com";
     private static final String DOMAIN_URL = "https://domain.com/";
-    private static final String HASH = "/hash";
+    private static final String HASH = "hash";
 
     @Container
     public static PostgreSQLContainer<?> POSTGRESQL_CONTAINER =
@@ -105,7 +105,7 @@ public class UrlControllerMockMvcIT {
         @Test
         @DisplayName("Exception when try redirect to long url with does not existed url in DB")
         public void whenRedirectToLongUrlThenReturnException() throws Exception {
-            mockMvc.perform(get("/v1/urls" + HASH))
+            mockMvc.perform(get("/v1/urls/" + HASH))
                     .andExpect(status().isInternalServerError());
         }
     }
